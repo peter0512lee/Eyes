@@ -16,7 +16,6 @@
 
 import requests
 import json
-import base64
 import configparser
 
 config = configparser.ConfigParser()

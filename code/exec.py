@@ -1,10 +1,7 @@
 import paho.mqtt.client as mqtt
-import numpy as np
 import time
 import json
 import configparser
-
-import urllib
 import requests
 import os
 

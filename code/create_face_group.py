@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-#+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-#|R|a|s|p|b|e|r|r|y|P|i|.|c|o|m|.|t|w|
-#+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+# +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+# |R|a|s|p|b|e|r|r|y|P|i|.|c|o|m|.|t|w|
+# +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 # Copyright (c) 2019, raspberrypi.com.tw
 # All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
@@ -33,12 +33,9 @@ headers = {
 }
 
 data = {
-    "groupName":"He",
-    "groupMetadata":"He"
+    "groupName": "He",
+    "groupMetadata": "He"
 }
 
 response = requests.post(apiURL, headers=headers, data=json.dumps(data))
 print(response.text)
-
-
-

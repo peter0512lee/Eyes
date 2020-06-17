@@ -1,18 +1,14 @@
-import paho.mqtt.client as mqtt
-import time
-import json
 import configparser
-import requests
+import json
 import os
-
+import random
+import subprocess
+import time
+from subprocess import call
 from urllib.request import urlretrieve
 
-from subprocess import call
-
-import subprocess
-
-import random
-
+import paho.mqtt.client as mqtt
+import requests
 import RPi.GPIO as GPIO
 
 GPIO.setmode(GPIO.BCM)

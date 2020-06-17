@@ -14,9 +14,10 @@
 # Date   : 2019/08/07
 # Usage  : python3 create_face_group.py
 
-import requests
-import json
 import configparser
+import json
+
+import requests
 
 config = configparser.ConfigParser()
 config.read("cht.conf")

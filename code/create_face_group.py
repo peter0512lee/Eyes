@@ -19,23 +19,20 @@ import json
 import configparser
 
 config = configparser.ConfigParser()
-config.read('cht.conf')
-apiKey = config.get('demo-key', 'apiKey')
+config.read("cht.conf")
+apiKey = config.get("demo-key", "apiKey")
 
 print(apiKey)
 
-server = 'http://iot.cht.com.tw/apis/CHTIoT'
-apiURL = 'https://iot.cht.com.tw/apis/CHTIoT/face/v2/FaceGroup'
+server = "http://iot.cht.com.tw/apis/CHTIoT"
+apiURL = "https://iot.cht.com.tw/apis/CHTIoT/face/v2/FaceGroup"
 
 headers = {
     "X-API-KEY": apiKey,
     "Content-Type": "application/json",
 }
 
-data = {
-    "groupName": "He",
-    "groupMetadata": "He"
-}
+data = {"groupName": "He", "groupMetadata": "He"}
 
 response = requests.post(apiURL, headers=headers, data=json.dumps(data))
 print(response.text)

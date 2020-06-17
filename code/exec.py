@@ -14,20 +14,21 @@ import subprocess
 import random
 
 import RPi.GPIO as GPIO
+
 GPIO.setmode(GPIO.BCM)
 
 config = configparser.ConfigParser()
-config.read('cht.conf')
-projectKey = config.get('device-key', 'projectKey')
-deviceId = config.get('device-key', 'deviceId')
-sensorId = config.get('device-key', 'sensorId')
-thingId = config.get('device-key', 'thingId')
-cameraId = config.get('device-key', 'cameraId')
-helpId = config.get('device-key', 'helpId')
+config.read("cht.conf")
+projectKey = config.get("device-key", "projectKey")
+deviceId = config.get("device-key", "deviceId")
+sensorId = config.get("device-key", "sensorId")
+thingId = config.get("device-key", "thingId")
+cameraId = config.get("device-key", "cameraId")
+helpId = config.get("device-key", "helpId")
 
 host = "iot.cht.com.tw"
 
-topic = '/v1/device/' + deviceId + '/rawdata'
+topic = "/v1/device/" + deviceId + "/rawdata"
 print(topic)
 
 user, password = projectKey, projectKey
@@ -45,13 +46,13 @@ print("Distance Measurement In Progress")
 
 #######################play sound#########################
 
-apiURL = 'http://iot.cht.com.tw/apis/CHTIoT/tts/v1/ch/synthesis'
+apiURL = "http://iot.cht.com.tw/apis/CHTIoT/tts/v1/ch/synthesis"
 
-text = 'push button'
+text = "push button"
 
-my_data = {'inputText': text, 'outputName': 'button.mp3'}
+my_data = {"inputText": text, "outputName": "button.mp3"}
 r = requests.post(apiURL, data=my_data)
-f = json.loads(r.text)['file']
+f = json.loads(r.text)["file"]
 
 urlretrieve(f, "button.mp3")
 os.system("aplay button.mp3")
@@ -76,7 +77,7 @@ try:
             value = random.randint(0, 50)
             t = str(time.strftime("%Y-%m-%dT%H:%M:%S"))
 
-            payload = [{"id": helpId, "value": [value], "time":t}]
+            payload = [{"id": helpId, "value": [value], "time": t}]
             print(payload)
             client.publish(topic, "%s" % (json.dumps(payload)))
 
@@ -85,7 +86,7 @@ try:
             value = 51
             t = str(time.strftime("%Y-%m-%dT%H:%M:%S"))
 
-            payload = [{"id": helpId, "value": [value], "time":t}]
+            payload = [{"id": helpId, "value": [value], "time": t}]
             print(payload)
             client.publish(topic, "%s" % (json.dumps(payload)))
 
@@ -95,7 +96,7 @@ try:
 
             input_state = GPIO.input(BUTTON)
 
-            if (input_state == False):
+            if input_state == False:
 
                 GPIO.output(TRIG, False)
 
@@ -122,27 +123,27 @@ try:
 
                 ###########################################################
 
-                print('take photo')
-                call('fswebcam m.jpg', shell=True)
+                print("take photo")
+                call("fswebcam m.jpg", shell=True)
 
-                print('move photo to darknet')
-                call('mv m.jpg ../darknet/data', shell=True)
+                print("move photo to darknet")
+                call("mv m.jpg ../darknet/data", shell=True)
 
-                print('move into darknet')
+                print("move into darknet")
                 os.chdir("../darknet")
 
                 #####################initialization#############################
 
-                things = '000000'
+                things = "000000"
                 t = str(time.strftime("%Y-%m-%dT%H:%M:%S"))
 
-                payload = [{"id": "thing", "value": [things], "time":t}]
+                payload = [{"id": "thing", "value": [things], "time": t}]
                 print(payload)
                 client.publish(topic, "%s" % (json.dumps(payload)))
 
                 #####################detection###################################
 
-                cmd = './darknet detector test cfg/voc.data cfg/yolov2-tiny-voc.cfg yolov2-tiny-voc.weights data/m.jpg'
+                cmd = "./darknet detector test cfg/voc.data cfg/yolov2-tiny-voc.cfg yolov2-tiny-voc.weights data/m.jpg"
 
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
@@ -152,17 +153,17 @@ try:
 
                 print(output)
 
-                print("Command output : ", output[44:len(output) - 6])
+                print("Command output : ", output[44 : len(output) - 6])
 
-                print('move predictions.jpg to test')
-                call('mv predictions.jpg ../test', shell=True)
+                print("move predictions.jpg to test")
+                call("mv predictions.jpg ../test", shell=True)
 
-                print('move into test')
+                print("move into test")
                 os.chdir("../test")
 
                 ##########################################################
 
-                buffer1 = str(output[44:len(output) - 6])
+                buffer1 = str(output[44 : len(output) - 6])
 
                 print(buffer1)
 
@@ -172,24 +173,26 @@ try:
 
                 if buffer1[2:8] == "person":
                     call(
-                        'python3 recognize_face_in_facegroup.py predictions.jpg', shell=True)
-                    f = open('name.txt', 'r')
+                        "python3 recognize_face_in_facegroup.py predictions.jpg",
+                        shell=True,
+                    )
+                    f = open("name.txt", "r")
                     buffer1 = f.read()
-                    #myCmd = os.popen('python3 recognize_face_in_facegroup.py test.jpg').read()
-                    #print(myCmd[269:len(myCmd) - 52])
+                    # myCmd = os.popen('python3 recognize_face_in_facegroup.py test.jpg').read()
+                    # print(myCmd[269:len(myCmd) - 52])
 
                     # print(output)
-                    #print(output[285:len(output) - 37])
+                    # print(output[285:len(output) - 37])
 
                 #######################play sound#########################
 
-                apiURL = 'http://iot.cht.com.tw/apis/CHTIoT/tts/v1/ch/synthesis'
+                apiURL = "http://iot.cht.com.tw/apis/CHTIoT/tts/v1/ch/synthesis"
 
-                text = buffer1 + str(distance) + 'centimeter ' + 'ahead'
+                text = buffer1 + str(distance) + "centimeter " + "ahead"
 
-                my_data = {'inputText': text, 'outputName': 'out.mp3'}
+                my_data = {"inputText": text, "outputName": "out.mp3"}
                 r = requests.post(apiURL, data=my_data)
-                f = json.loads(r.text)['file']
+                f = json.loads(r.text)["file"]
 
                 urlretrieve(f, "out.mp3")
                 os.system("aplay out.mp3")
@@ -199,30 +202,36 @@ try:
                 dist = str(int(distance))
                 t = str(time.strftime("%Y-%m-%dT%H:%M:%S"))
 
-                payload = [{"id": sensorId, "value": [dist], "time":t}]
+                payload = [{"id": sensorId, "value": [dist], "time": t}]
                 print(payload)
                 client.publish(topic, "%s" % (json.dumps(payload)))
 
                 ##################upload thing to IoT platform##########
 
-                things = str(output[44:len(output) - 6])
+                things = str(output[44 : len(output) - 6])
                 t = str(time.strftime("%Y-%m-%dT%H:%M:%S"))
 
-                payload = [{"id": "thing", "value": [things], "time":t}]
+                payload = [{"id": "thing", "value": [things], "time": t}]
                 print(payload)
                 client.publish(topic, "%s" % (json.dumps(payload)))
 
                 ####################upload photo to IoT platform#########
 
-                apiURL = 'http://iot.cht.com.tw/iot/v1/device/' + deviceId + '/snapshot'
+                apiURL = "http://iot.cht.com.tw/iot/v1/device/" + deviceId + "/snapshot"
 
                 headers = {
                     "CK": projectKey,
                     "accept": "application/json",
                 }
 
-                files = {"img": ("test", open("predictions.jpg", "rb"), "image/jpeg"), "meta": (
-                    None, json.dumps({"id": cameraId, "value": ["webcam"]}), 'application/json')}
+                files = {
+                    "img": ("test", open("predictions.jpg", "rb"), "image/jpeg"),
+                    "meta": (
+                        None,
+                        json.dumps({"id": cameraId, "value": ["webcam"]}),
+                        "application/json",
+                    ),
+                }
 
                 response = requests.post(apiURL, files=files, headers=headers)
                 print(response.text)

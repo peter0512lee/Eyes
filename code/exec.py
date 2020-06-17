@@ -149,7 +149,7 @@ try:
 
                 print(output)
 
-                print("Command output : ", output[44 : len(output) - 6])
+                print("Command output : ", output[44:len(output) - 6])
 
                 print("move predictions.jpg to test")
                 call("mv predictions.jpg ../test", shell=True)
@@ -159,7 +159,7 @@ try:
 
                 ##########################################################
 
-                buffer1 = str(output[44 : len(output) - 6])
+                buffer1 = str(output[44:len(output) - 6])
 
                 print(buffer1)
 
@@ -204,7 +204,7 @@ try:
 
                 ##################upload thing to IoT platform##########
 
-                things = str(output[44 : len(output) - 6])
+                things = str(output[44:len(output) - 6])
                 t = str(time.strftime("%Y-%m-%dT%H:%M:%S"))
 
                 payload = [{"id": "thing", "value": [things], "time": t}]
@@ -221,10 +221,14 @@ try:
                 }
 
                 files = {
-                    "img": ("test", open("predictions.jpg", "rb"), "image/jpeg"),
+                    "img": ("test", open("predictions.jpg",
+                                         "rb"), "image/jpeg"),
                     "meta": (
                         None,
-                        json.dumps({"id": cameraId, "value": ["webcam"]}),
+                        json.dumps({
+                            "id": cameraId,
+                            "value": ["webcam"]
+                        }),
                         "application/json",
                     ),
                 }
